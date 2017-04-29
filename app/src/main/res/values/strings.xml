@@ -10,5 +10,11 @@
     <!-- Menu -->
     <string name="action_detele">Delete</string>
     <string name="action_save">Save</string>
+
+    <!-- Snackbars -->
+    <string name="error_save">There is a problem saving your image</string>
+    <string name="save">Image saved correctly</string>
+    <string name="error_delete">There is a problem deleting your image</string>
+    <string name="delete">Image deleted</string>
 </resources>
 
