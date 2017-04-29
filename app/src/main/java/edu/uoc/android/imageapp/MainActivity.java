@@ -1,8 +1,11 @@
 package edu.uoc.android.imageapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,10 +21,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Request code
     private final int REQUEST_PERMISSION_STORAGE_SAVE = 101;
     private final int REQUEST_PERMISSION_STORAGE_DELETE = 102;
+    private final int REQUEST_IMAGE_CAPTURE = 103;
     // Views
     private View rootView;
     private Button buttonOpenImage;
-    private ImageView imageView;
+    private ImageView mImageView;
     private TextView tvMessage;
 
     @Override
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Set views
         rootView = findViewById(R.id.root);
         buttonOpenImage = (Button) findViewById(R.id.image_app_btn_capture);
-        imageView = (ImageView) findViewById(R.id.image_app_iv_picture);
+        mImageView = (ImageView) findViewById(R.id.image_app_iv_picture);
         tvMessage = (TextView) findViewById(R.id.image_app_tv_message);
 
         // Set listeners
@@ -87,6 +91,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == buttonOpenImage) {
             // TODO: launching an intent to get an image from camera app
+
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mImageView.setImageBitmap(imageBitmap);
         }
     }
 
