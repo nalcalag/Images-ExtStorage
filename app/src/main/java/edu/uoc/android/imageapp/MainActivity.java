@@ -106,6 +106,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageView.setImageBitmap(imageBitmap);
+            if (mImageView !=null) {
+                tvMessage.setVisibility(View.INVISIBLE);
+            } else {
+                tvMessage.setVisibility(View.VISIBLE);
+            }
         }
     }
 
