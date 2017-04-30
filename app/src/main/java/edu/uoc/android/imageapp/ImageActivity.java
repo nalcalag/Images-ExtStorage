@@ -32,7 +32,7 @@ public class ImageActivity {
             uocFile.mkdir();
         }
 
-        // Comprueba si el fichero de destino ya existe, en este caso lo borra.
+        // Check if file exists and delete it
         File file = new File(directory, imgName);
         if (file.exists()) {
             file.delete();
@@ -62,7 +62,7 @@ public class ImageActivity {
 
     public void deleteImage() {
 
-        File file = new File(directory + imgName);
+        File file = new File(directory + "/" + imgName);
 
         if (file.exists()) {
             file.delete();

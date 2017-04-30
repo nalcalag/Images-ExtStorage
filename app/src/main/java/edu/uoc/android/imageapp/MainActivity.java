@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -59,10 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Check if there is an image saved in the phone storage and print it
         uocPhotoPath = imageActivity.getDirectory() + "/" + imageActivity.getImgName();
-        File file = new File(imageActivity.getDirectory() + "/" + imageActivity.getImgName());
-
-        if (file.exists()) {
-
+        File file = new File(uocPhotoPath);
+        if(file.canWrite()) {
+            // write access
             mImageView.setImageBitmap(BitmapFactory.decodeFile(uocPhotoPath));
             tvMessage.setVisibility(View.INVISIBLE);
         }
@@ -94,12 +94,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                               REQUEST_PERMISSION_STORAGE_DELETE);
         }
-        // TODO: show dialog if image file exists
 
-        if (mImageView != null) {
+        deleteImageAction();
+
+    }
+
+    private void deleteImageAction() {
+        if (mImageView.getDrawable() != null) {
             new AlertDialog.Builder(this)
-                    .setTitle("Delete Image")
-                    .setMessage("Do you want to delete this image?")
+                    .setTitle(R.string.title_alert)
+                    .setMessage(R.string.alert_msg)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
@@ -126,7 +130,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                               REQUEST_PERMISSION_STORAGE_SAVE);
         }
-        // TODO save the image
+
+        saveImageAction();
+    }
+
+    private void saveImageAction() {
         imageActivity = new ImageActivity(rootView);
         //Check if there is an image
         if (mImageView.getDrawable() != null) {
@@ -176,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private File createImageFile(String directoryName) throws IOException {
         // Create an image file name
-        String imageFileName = "imageApp";
+        String imageFileName = "imageTemp";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/" + directoryName);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -234,23 +242,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case REQUEST_PERMISSION_STORAGE_DELETE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
                     // show dialog if image file exists
-                    // TODO: show dialog if image file exists
+                    deleteImageAction();
+
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    // TODO: show message
+
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.root),
+                            R.string.permission_denied, Snackbar.LENGTH_SHORT);
+                    mySnackbar.show();
                 }
             }
             case REQUEST_PERMISSION_STORAGE_SAVE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
                     // save the image file
-                    // TODO: save the image
+                    saveImageAction();
+
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    // TODO: show message
+
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.root),
+                            R.string.permission_denied, Snackbar.LENGTH_SHORT);
+                    mySnackbar.show();
                 }
             }
         }
