@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button buttonOpenImage;
     private ImageView mImageView;
     private TextView tvMessage;
-    //
+
     String mCurrentPhotoPath;
     String uocPhotoPath;
     ImageActivity imageActivity;
